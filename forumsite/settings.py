@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
-import os
 from pathlib import Path
 from decouple import config, Csv
 
@@ -194,17 +193,16 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 # Cache configuration (Redis)
 CACHES = {
     "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": config('REDIS_URL', default='redis://127.0.0.1:6379/0'),
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache" if DEBUG else "django_redis.cache.RedisCache",
+        "LOCATION": config('REDIS_URL', default='redis://127.0.0.1:6379/0') if not DEBUG else "unique-snowflake",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
+        } if not DEBUG else {}
     }
 }
 
 # Session configuration
-SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-SESSION_CACHE_ALIAS = "default"
+SESSION_ENGINE = "django.contrib.sessions.backends.db"
 
 # CORS settings
 CORS_ALLOW_ALL_ORIGINS = DEBUG
