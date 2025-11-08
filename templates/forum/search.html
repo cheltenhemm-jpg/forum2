@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Поиск - {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2><i class="fas fa-search"></i> Поиск</h2>
+        
+        <div class="card mb-3">
+            <div class="card-body">
+                <form method="get">
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Искать</button>
+                </form>
+            </div>
+        </div>
+
+        {% if query %}
+        <h4>Результаты поиска: "{{ query }}"</h4>
+        {% if results %}
+            {% for type, item in results %}
+                {% if type == 'thread' %}
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <h5><a href="{% url 'forum:thread_detail' item.slug %}">{{ item.title }}</a></h5>
+                        <p class="text-muted mb-0">
+                            Тема в <a href="{% url 'forum:category_detail' item.category.slug %}">{{ item.category.name }}</a> |
+                            Автор: {{ item.author.username }}
+                        </p>
+                    </div>
+                </div>
+                {% elif type == 'post' %}
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <p><a href="{{ item.get_absolute_url }}">{{ item.content|truncatewords:30|safe }}</a></p>
+                        <p class="text-muted mb-0">
+                            Сообщение в <a href="{% url 'forum:thread_detail' item.thread.slug %}">{{ item.thread.title }}</a> |
+                            Автор: {{ item.author.username }}
+                        </p>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info">По вашему запросу ничего не найдено.</div>
+        {% endif %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

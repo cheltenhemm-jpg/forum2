@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}{{ category.name }} - {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'forum:index' %}">Форум</a></li>
+                <li class="breadcrumb-item active">{{ category.name }}</li>
+            </ol>
+        </nav>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>{{ category.icon|safe }} {{ category.name }}</h2>
+            {% if user.is_authenticated %}
+            <a href="{% url 'forum:thread_create' %}" class="btn btn-primary"><i class="fas fa-plus"></i> Создать тему</a>
+            {% endif %}
+        </div>
+
+        {% for thread in threads %}
+        <div class="card mb-2 thread-list-item {% if thread.is_pinned %}pinned-thread{% endif %} {% if thread.is_locked %}locked-thread{% endif %}">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h5>
+                            {% if thread.is_pinned %}<i class="fas fa-thumbtack text-warning"></i>{% endif %}
+                            {% if thread.is_locked %}<i class="fas fa-lock text-danger"></i>{% endif %}
+                            <a href="{% url 'forum:thread_detail' thread.slug %}">{{ thread.title }}</a>
+                        </h5>
+                        <p class="text-muted mb-0">
+                            <small>
+                                <i class="fas fa-user"></i> {{ thread.author.username }} |
+                                <i class="fas fa-clock"></i> {{ thread.created_at|naturaltime }} |
+                                <i class="fas fa-eye"></i> {{ thread.views }} просмотров
+                            </small>
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-right">
+                        <span class="badge badge-primary">{{ thread.post_count }} ответов</span>
+                        {% if thread.last_post %}
+                        <br><small class="text-muted">Последнее: {{ thread.last_post.author.username }} ({{ thread.last_post.created_at|naturaltime }})</small>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="alert alert-info">В этой категории пока нет тем.</div>
+        {% endfor %}
+
+        <!-- Pagination -->
+        {% if threads.has_other_pages %}
+        <nav>
+            <ul class="pagination justify-content-center">
+                {% if threads.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ threads.previous_page_number }}">Назад</a></li>
+                {% endif %}
+                
+                {% for num in threads.paginator.page_range %}
+                <li class="page-item {% if threads.number == num %}active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+                {% endfor %}
+                
+                {% if threads.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ threads.next_page_number }}">Вперед</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

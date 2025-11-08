@@ -1,0 +1,142 @@
+/* Custom Forum Styles - По образцу legalizer.cc */
+
+body {
+    background-color: #f5f7fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.card {
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.card-header {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    font-weight: 600;
+}
+
+.post-card {
+    border-left: 3px solid #007bff;
+}
+
+.user-avatar {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.user-info {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.thread-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.thread-meta {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.post-content {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.post-signature {
+    border-top: 1px solid #dee2e6;
+    padding-top: 10px;
+    margin-top: 10px;
+    font-size: 0.85rem;
+    color: #6c757d;
+    font-style: italic;
+}
+
+.like-buttons button {
+    margin-right: 5px;
+}
+
+.pinned-thread {
+    background-color: #fff3cd;
+    border-left: 4px solid #ffc107;
+}
+
+.locked-thread {
+    opacity: 0.7;
+}
+
+footer {
+    margin-top: auto;
+}
+
+/* Pagination */
+.pagination {
+    margin-top: 20px;
+}
+
+/* User Stats */
+.user-stats {
+    display: flex;
+    justify-content: space-around;
+    padding: 15px 0;
+}
+
+.user-stats div {
+    text-align: center;
+}
+
+.user-stats div strong {
+    display: block;
+    font-size: 1.5rem;
+    color: #007bff;
+}
+
+/* Badge Styles */
+.badge-moderator {
+    background-color: #28a745;
+}
+
+.badge-admin {
+    background-color: #dc3545;
+}
+
+/* Thread List */
+.thread-list-item {
+    padding: 15px;
+    border-bottom: 1px solid #dee2e6;
+    transition: background-color 0.2s;
+}
+
+.thread-list-item:hover {
+    background-color: #f8f9fa;
+}
+
+.thread-list-item:last-child {
+    border-bottom: none;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .thread-title {
+        font-size: 1.2rem;
+    }
+    
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+    }
+}

@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}{{ profile_user.username }} - {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                {% if profile_user.avatar %}
+                <img src="{{ profile_user.avatar.url }}" class="rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;" alt="{{ profile_user.username }}">
+                {% else %}
+                <i class="fas fa-user-circle fa-5x text-muted mb-3"></i>
+                {% endif %}
+                
+                <h4>{{ profile_user.username }}</h4>
+                
+                {% if profile_user.role == 'admin' %}
+                <span class="badge badge-admin">Администратор</span>
+                {% elif profile_user.role == 'moderator' %}
+                <span class="badge badge-moderator">Модератор</span>
+                {% else %}
+                <span class="badge badge-secondary">Пользователь</span>
+                {% endif %}
+                
+                {% if user == profile_user %}
+                <a href="{% url 'accounts:profile_edit' %}" class="btn btn-primary btn-block mt-3">
+                    <i class="fas fa-edit"></i> Редактировать профиль
+                </a>
+                {% else %}
+                <a href="{% url 'forum:message_send_to' profile_user.username %}" class="btn btn-primary btn-block mt-3">
+                    <i class="fas fa-envelope"></i> Отправить сообщение
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="card mt-3">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="fas fa-chart-bar"></i> Статистика</h5>
+            </div>
+            <div class="card-body">
+                <div class="user-stats">
+                    <div>
+                        <strong>{{ profile_user.thread_count }}</strong>
+                        <small>Тем</small>
+                    </div>
+                    <div>
+                        <strong>{{ profile_user.post_count }}</strong>
+                        <small>Сообщений</small>
+                    </div>
+                    <div>
+                        <strong>{{ profile_user.reputation }}</strong>
+                        <small>Репутация</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-info-circle"></i> Информация</h5>
+            </div>
+            <div class="card-body">
+                {% if profile_user.bio %}
+                <p><strong>О себе:</strong><br>{{ profile_user.bio }}</p>
+                {% endif %}
+                
+                <p class="mb-1"><i class="fas fa-calendar"></i> <strong>Регистрация:</strong> {{ profile_user.date_joined|date:"d.m.Y" }}</p>
+                <p class="mb-1"><i class="fas fa-clock"></i> <strong>Последний визит:</strong> {{ profile_user.last_seen|naturaltime }}</p>
+                
+                {% if profile_user.location %}
+                <p class="mb-1"><i class="fas fa-map-marker-alt"></i> <strong>Местоположение:</strong> {{ profile_user.location }}</p>
+                {% endif %}
+                
+                {% if profile_user.website %}
+                <p class="mb-1"><i class="fas fa-globe"></i> <strong>Сайт:</strong> <a href="{{ profile_user.website }}" target="_blank">{{ profile_user.website }}</a></p>
+                {% endif %}
+                
+                {% if profile.show_email or user == profile_user %}
+                <p class="mb-1"><i class="fas fa-envelope"></i> <strong>Email:</strong> {{ profile_user.email }}</p>
+                {% endif %}
+                
+                {% if profile.telegram %}
+                <p class="mb-1"><i class="fab fa-telegram"></i> <strong>Telegram:</strong> {{ profile.telegram }}</p>
+                {% endif %}
+                
+                {% if profile.discord %}
+                <p class="mb-1"><i class="fab fa-discord"></i> <strong>Discord:</strong> {{ profile.discord }}</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-comments"></i> Последние темы</h5>
+            </div>
+            <div class="list-group list-group-flush">
+                {% for thread in profile_user.threads.all|slice:":5" %}
+                <a href="{% url 'forum:thread_detail' thread.slug %}" class="list-group-item list-group-item-action">
+                    <strong>{{ thread.title }}</strong><br>
+                    <small class="text-muted">{{ thread.created_at|naturaltime }} | {{ thread.post_count }} ответов</small>
+                </a>
+                {% empty %}
+                <div class="list-group-item">Нет тем</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

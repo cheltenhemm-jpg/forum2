@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Редактировать профиль - {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="fas fa-edit"></i> Редактировать профиль</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <h5>Основная информация</h5>
+                    {{ user_form|crispy }}
+                    <hr>
+                    <h5>Дополнительная информация</h5>
+                    {{ profile_form|crispy }}
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Сохранить</button>
+                    <a href="{% url 'accounts:profile' user.username %}" class="btn btn-secondary">Отмена</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
